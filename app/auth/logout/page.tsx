@@ -1,6 +1,5 @@
 import { Button, Title } from "@mantine/core";
 import { themeColor } from "@/app/lib/constant";
-import Header from "@/app/components/Header";
 
 const title = "Logout - Astrapi - Network File System";
 const url = process.env.NEXT_PUBLIC_BASE_URL + `/auth/logout` ?? "https://example.com";
@@ -20,7 +19,6 @@ export const metadata = {
 export default function Login() {
   return (
     <>
-      <Header />
       <Title order={2} my={16}>
         Are you sure to logout?
       </Title>

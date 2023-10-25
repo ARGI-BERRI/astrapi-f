@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { User } from "@supabase/auth-helpers-nextjs";
 import { Anchor, Card, Center, Loader, Text, Title } from "@mantine/core";
 import { themeColor } from "../lib/constant";
+import { supabase } from "../lib/supabase";
 
 interface FileInformation {
   /**
@@ -28,6 +30,7 @@ interface FileInformation {
 
 export default function FileList() {
   const [files, setFiles] = useState<FileInformation[]>([]);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
 
   async function fetchFiles() {
     const request = async () => {
@@ -42,6 +45,10 @@ export default function FileList() {
 
   useEffect(() => {
     fetchFiles();
+
+    (async () => {
+      setUser((await supabase.auth.getUser()).data.user);
+    })();
   }, []);
 
   return (
@@ -49,21 +56,23 @@ export default function FileList() {
       <Title order={2} size={"lg"} mt={32}>
         Uploaded files
       </Title>
-      <Center>{files.length === 0 && <Loader color={themeColor} size={"lg"} />}</Center>
-      {files.map((file) => {
-        return (
-          <section key={file.Key}>
-            <Card my={16}>
-              <Title order={3} size={"h6"}>
-                <Anchor href={file.Path} target="_blank" c={themeColor}>
-                  {file.Key}
-                </Anchor>
-              </Title>
-              <Text c={"dimmed"}>Uploaded at: {file.LastModified}</Text>
-            </Card>
-          </section>
-        );
-      })}
+      <Center>{user === undefined && <Loader color={themeColor} size={"lg"} />}</Center>
+      {user &&
+        files.map((file) => {
+          return (
+            <section key={file.Key}>
+              <Card my={16}>
+                <Title order={3} size={"h6"}>
+                  <Anchor href={file.Path} target="_blank" c={themeColor}>
+                    {file.Key}
+                  </Anchor>
+                </Title>
+                <Text c={"dimmed"}>Uploaded at: {file.LastModified}</Text>
+              </Card>
+            </section>
+          );
+        })}
+      {user === null && <Text my={8}>Please login to see contents.</Text>}
     </>
   );
 }

@@ -5,6 +5,7 @@ import "./globals.css";
 import { Roboto } from "next/font/google";
 import { ColorSchemeScript, Container, MantineProvider } from "@mantine/core";
 import Footer from "./components/Footer";
+import Header from "./components/Header";
 
 const siteName = "ENDROIT.NET";
 const title = "Astrapi - Network File System";
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MantineProvider>
           <Container size={"xs"}>
             <main>
+              <Header />
               {children}
               <Footer />
             </main>
