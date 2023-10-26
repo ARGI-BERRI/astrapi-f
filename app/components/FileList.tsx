@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { User } from "@supabase/auth-helpers-nextjs";
 import { Anchor, Card, Center, Loader, Text, Title } from "@mantine/core";
 import { themeColor } from "../lib/constant";
-import { supabase } from "../lib/supabase";
 
 interface FileInformation {
   /**
@@ -30,25 +28,31 @@ interface FileInformation {
 
 export default function FileList() {
   const [files, setFiles] = useState<FileInformation[]>([]);
-  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const [fetchStatus, setFetchStatus] = useState<"ok" | "fail" | "fetching">("fetching");
 
   async function fetchFiles() {
-    const request = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/files`);
-      const json = (await response.json()).Contents;
+    setFetchStatus("fetching");
 
-      setFiles(json);
+    const doRequest = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/files`);
+
+      if (response.status === 200) {
+        setFetchStatus("ok");
+      } else {
+        setFetchStatus("fail");
+        return;
+      }
+
+      const json = await response.json();
+
+      setFiles(json.Contents);
     };
 
-    request();
+    doRequest();
   }
 
   useEffect(() => {
     fetchFiles();
-
-    (async () => {
-      setUser((await supabase.auth.getUser()).data.user);
-    })();
   }, []);
 
   return (
@@ -56,8 +60,8 @@ export default function FileList() {
       <Title order={2} size={"lg"} mt={32}>
         Uploaded files
       </Title>
-      <Center>{user === undefined && <Loader color={themeColor} size={"lg"} />}</Center>
-      {user &&
+      {fetchStatus === "fetching" && <Center>{<Loader color={themeColor} size={"lg"} />}</Center>}
+      {fetchStatus === "ok" &&
         files.map((file) => {
           return (
             <section key={file.Key}>
@@ -72,7 +76,7 @@ export default function FileList() {
             </section>
           );
         })}
-      {user === null && <Text my={8}>Please login to see contents.</Text>}
+      {fetchStatus === "fail" && <Text my={8}>Please login to see contents.</Text>}
     </>
   );
 }

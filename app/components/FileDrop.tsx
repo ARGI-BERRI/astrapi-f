@@ -14,16 +14,18 @@ export default function FileDrop() {
   const [isUploading, setIsUploading] = useState(false);
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
-  function upload(files: FileWithPath[]) {
-    const fileNames = files.map((file) => file.name).join(", ");
-
-    console.log(`[file] processing: ${fileNames}`);
+  async function upload(files: FileWithPath[]) {
     setIsUploading(true);
 
-    setTimeout(() => {
-      console.log(`[file] uploaded: ${fileNames}`);
-      setIsUploading(false);
-    }, 1000);
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append("file", new Blob([await file.arrayBuffer()], { type: file.type }));
+      formData.append("Key", file.name);
+
+      console.log(formData);
+    }
+
+    setIsUploading(false);
   }
 
   useEffect(() => {
