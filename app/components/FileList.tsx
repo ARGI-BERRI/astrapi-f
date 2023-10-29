@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Anchor, Card, Center, Loader, Text, Title } from "@mantine/core";
 import { themeColor } from "../lib/constant";
 
@@ -26,7 +26,12 @@ interface FileInformation {
   Path: string;
 }
 
-export default function FileList() {
+interface Props {
+  setUploaded: Dispatch<SetStateAction<boolean>>;
+  uploaded: boolean;
+}
+
+export default function FileList({ uploaded, setUploaded }: Props) {
   const [files, setFiles] = useState<FileInformation[]>([]);
   const [fetchStatus, setFetchStatus] = useState<"ok" | "fail" | "fetching">("fetching");
 
@@ -53,7 +58,8 @@ export default function FileList() {
 
   useEffect(() => {
     fetchFiles();
-  }, []);
+    setUploaded(false);
+  }, [setUploaded, uploaded]);
 
   return (
     <>

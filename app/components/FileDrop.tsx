@@ -2,7 +2,7 @@
 
 import styles from "./css/FileDrop.module.css";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "@supabase/auth-helpers-nextjs";
 import { Group, Text, Title } from "@mantine/core";
 import { Dropzone, DropzoneAccept, DropzoneIdle, DropzoneReject, FileWithPath } from "@mantine/dropzone";
@@ -10,7 +10,11 @@ import { AlertTriangle, File, Upload } from "react-feather";
 import { themeColor } from "../lib/constant";
 import { supabase } from "../lib/supabase";
 
-export default function FileDrop() {
+interface Props {
+  setUploaded: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function FileDrop({ setUploaded }: Props) {
   const [isUploading, setIsUploading] = useState(false);
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
@@ -28,7 +32,9 @@ export default function FileDrop() {
         body: formData,
       });
 
-      console.log(response);
+      if (response.ok) {
+        setUploaded(true);
+      }
     }
 
     setIsUploading(false);
