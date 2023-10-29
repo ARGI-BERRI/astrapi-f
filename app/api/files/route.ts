@@ -52,6 +52,11 @@ export async function GET() {
  * Creates a new file and upload it to the storage server
  */
 export async function POST(request: NextRequest) {
+  const formData = await request.formData();
+  if (formData.get("Body") === null) {
+    return NextResponse.json({}, { status: 400 });
+  }
+
   const cookieStore = cookies();
   const supabase = createServerComponentClient<Database>({ cookies: () => cookieStore });
   const user = await supabase.auth.getUser();
@@ -59,16 +64,19 @@ export async function POST(request: NextRequest) {
   if (user.data.user === null) {
     return NextResponse.json({}, { status: 401 });
   }
+  const file = formData.get("Body") as File;
+  const extension = file.name.split(".").pop();
+  const Key = crypto.randomUUID() + extension;
+  const Body = Buffer.from(await file.arrayBuffer());
 
-  const formData = await request.formData();
-  const Key = formData.get("name")?.toString();
-  const Body = formData.get("file") as Blob;
+  console.log(`[uploader - server] uploading to r2: ${Key}`);
 
   const response = await R2.send(
     new PutObjectCommand({
       Bucket: process.env.R2_BUCKET,
       Key,
       Body,
+      ContentType: file.type,
     })
   );
 

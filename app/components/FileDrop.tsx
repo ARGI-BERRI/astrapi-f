@@ -19,10 +19,16 @@ export default function FileDrop() {
 
     for (const file of files) {
       const formData = new FormData();
-      formData.append("file", new Blob([await file.arrayBuffer()], { type: file.type }));
-      formData.append("Key", file.name);
+      formData.append("Body", new Blob([await file.arrayBuffer()], { type: file.type }));
 
-      console.log(formData);
+      console.log("[uploader] uploading...");
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/files`, {
+        method: "post",
+        body: formData,
+      });
+
+      console.log(response);
     }
 
     setIsUploading(false);
