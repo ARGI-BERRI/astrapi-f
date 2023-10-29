@@ -8,7 +8,7 @@ export default function Footer() {
       <Text c={"dimmed"}>(C) 2023 ARGIA. All rights reserved.</Text>
       <Text c={"dimmed"}>
         <Anchor href="https://example.com/" c={themeColor}>
-          Astrapi
+          Astrapi F
         </Anchor>{" "}
         is a free software. This software is licensed under{" "}
         <Anchor href="https://www.gnu.org/licenses/agpl-3.0.html.en" target="_blank" c={themeColor}>

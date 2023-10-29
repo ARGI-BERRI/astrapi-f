@@ -27,7 +27,7 @@ export default function Header() {
         <Group justify="space-between">
           <Group>
             <Title size={"xs"} fw={"normal"}>
-              Αστραπή - Astrapi
+              Astrapi F
             </Title>
           </Group>
           <Group>

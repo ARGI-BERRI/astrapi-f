@@ -8,8 +8,8 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 
 const siteName = "ENDROIT.NET";
-const title = "Astrapi - Network File System";
-const description = "Welcome to Astrapi Network File System for ENDROIT.NET";
+const title = "Astrapi F - Network File System";
+const description = "Welcome to “Astrapi F” Network File System for ENDROIT.NET";
 const url = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
 
 export const metadata = {
