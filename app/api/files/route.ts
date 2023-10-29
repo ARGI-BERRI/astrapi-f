@@ -1,4 +1,5 @@
 import R2 from "@/app/lib/R2";
+import mime from "mime";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/client-s3";
@@ -65,8 +66,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({}, { status: 401 });
   }
   const file = formData.get("Body") as File;
-  const extension = file.name.split(".").pop();
-  const Key = crypto.randomUUID() + extension;
+  const extension = mime.getExtension(file.type);
+  const Key = `${crypto.randomUUID()}.${extension}`;
   const Body = Buffer.from(await file.arrayBuffer());
 
   console.log(`[uploader - server] uploading to r2: ${Key}`);
