@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       <Text c={"dimmed"}>(C) 2023 ARGIA. All rights reserved.</Text>
       <Text c={"dimmed"}>
-        <Anchor href="https://example.com/" c={themeColor}>
+        <Anchor href="https://gitlab.com/ARGI-BERRI/astrapi-f" c={themeColor}>
           Astrapi F
         </Anchor>{" "}
         is a free software. This software is licensed under{" "}
